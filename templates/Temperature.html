@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature History</title>
+
+</head>
+
+<body style="display: flex; flex-direction: column; align-items: center;">
+    <h1>Temperature History</h1>
+    {% if status %}
+    <p>Total data count: {{ data_count }}</p>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Sensor ID</th>
+                <th>Temperature</th>
+                <th>Humidity</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in resultList %}
+            <tr>
+                <td>{{ item.myid }}</td>
+                <td>{{ item.sensor_id }}</td>
+                <td>{{ item.temperature }}</td>
+                <td>{{ item.humidity }}</td>
+                <td>{{ item.timestamp }}</td>
+                <td>
+                <a href="/edit{{item.myid}}">編輯</a>
+                <a href="/edit{{item.myid}}">刪除</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>{{ errormessage }}</p>
+    {% endif %}
+</body>
+
+</html>
