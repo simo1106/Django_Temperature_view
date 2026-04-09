@@ -4,15 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
     <title>Temperature History</title>
 
 </head>
 
-<body style="display: flex; flex-direction: column; align-items: center;">
+<body>
+<div class="w3-container">
     <h1>Temperature History</h1>
     {% if status %}
     <p>Total data count: {{ data_count }}</p>
-    <table border="1">
+    <table class="w3-table-all w3-card-4">
         <thead>
             <tr>
                 <th>ID</th>
@@ -41,6 +43,7 @@
     {% else %}
     <p>{{ errormessage }}</p>
     {% endif %}
+</div>
 </body>
 
 </html>
