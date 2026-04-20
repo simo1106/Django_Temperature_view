@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Temperature History</title>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+<style>
+    body {
+        background-color: #f4f4f4;
+    }
+    /* 微調搜尋表單的對齊 */
+    .search-form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w3-content w3-margin-top w3-margin-bottom" style="max-width:80%;">
+
+    <div class="w3-card-4 w3-white w3-round-large">
+
+        <header class="w3-container w3-blue w3-round-large"
+            style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+            <h2>Temperature History</h2>
+        </header>
+
+        <div class="w3-container w3-padding-16">
+            <div class="w3-row w3-margin-bottom w3-padding">
+                <div class="w3-col m6">
+                    <h5 class="w3-text-dark-grey">目前資料筆數: {{ data_count }}，<a href="/post/" class="w3-text-blue"><b>新增溫度資料</b></a></h5>
+                </div>
+                <div class="w3-col m6">
+                    <form action="{% url 'Temperature' %}" method="get" class="search-form w3-right">
+                        <label for="site_search" class="w3-text-dark-grey">搜尋關鍵字</label>
+                        <input class="w3-input w3-border w3-round" type="search" id="site_search" name="site_search" style="width: auto;">
+                        <button class="w3-button w3-blue w3-round" type="submit">搜尋</button>
+                    </form>
+                </div>
+            </div>
+
+            {% if status %}
+            <div class="w3-responsive">
+                <table class="w3-table w3-striped w3-bordered w3-hoverable">
+                    <thead>
+                        <tr class="w3-light-grey w3-text-blue">
+                            <th>ID</th>
+                            <th>Sensor ID</th>
+                            <th>Temp</th>
+                            <th>Humid</th>
+                            <th>Timestamp</th>
+                            <th class="w3-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {# 改為使用 page_obj 進行分頁渲染 #}
+                        {% for item in resultList %}
+                        <tr>
+                            <td>{{ item.myid }}</td>
+                            <td>{{ item.sensor_id }}</td>
+                            <td>{{ item.temperature }}°C</td>
+                            <td>{{ item.humidity }}%</td>
+                            <td>{{ item.timestamp }}</td>
+                            <td class="w3-center">
+                                <a href="/edit/{{item.myid}}/"
+                                    class="w3-button w3-blue w3-round-medium w3-small">編輯</a>
+                                <a href="/delete/{{item.myid}}/"
+                                    class="w3-button w3-red w3-round-medium w3-small">刪除</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {# 分頁導航 (加入 w3.css 樣式) #}
+            <div class="w3-center w3-margin-top w3-padding-16">
+                <div class="w3-bar">
+                    {# 最前頁 / 上一頁 #}
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1" class="w3-button w3-border w3-round-large w3-hover-blue">最前頁</a>
+                        <a href="?page={{ page_obj.previous_page_number }}" class="w3-button w3-border w3-round-large w3-hover-blue">上一頁</a>
+                    {% else %}
+                        <span class="w3-button w3-border w3-round-large w3-disabled">最前面</span>
+                        <span class="w3-button w3-border w3-round-large w3-disabled">上一頁</span>
+                    {% endif %}
+
+                    {# 頁碼中間部分 #}
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <strong class="w3-button w3-blue w3-border w3-round-large">{{ num }}</strong>
+                        {% else %}
+                            <a href="?page={{ num }}" class="w3-button w3-border w3-round-large w3-hover-blue">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+
+                    {# 下一頁 / 最後頁 #}
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="w3-button w3-border w3-round-large w3-hover-blue">下一頁</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}" class="w3-button w3-border w3-round-large w3-hover-blue">最後頁</a>
+                    {% else %}
+                        <span class="w3-button w3-border w3-round-large w3-disabled">下一頁</span>
+                        <span class="w3-button w3-border w3-round-large w3-disabled">最後面</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% else %}
+            <div class="w3-panel w3-pale-red w3-leftbar w3-border-red">
+                <p>{{ errormessage }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <footer class="w3-container w3-light-grey w3-padding w3-round-large"
+            style="border-top-left-radius: 0; border-top-right-radius: 0;">
+            <p class="w3-small w3-right">Temperature Monitor v1.0</p>
+        </footer>
+    </div>
+</div>
+{% endblock %}

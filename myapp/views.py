@@ -18,7 +18,7 @@ def Temperature(request):
         status = False
         errormessage = "No data found."
     # return HttpResponse("Hello, this is the index page.")
-    return render(request, 'Temperature.html', {'resultList': resultList,
+    return render(request, 'Temperature_v1.html', {'resultList': resultList,
                                              'status': status,
                                              'errormessage': errormessage,
                                              'data_count': data_count})
