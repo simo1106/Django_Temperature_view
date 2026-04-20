@@ -21,5 +21,7 @@ from myapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('homepage/', views.homepage),
-    path('Temperature/', views.Temperature, name='Temperature')
+    path('Temperature/', views.Temperature, name='Temperature'),
+    path('delete/<int:id>/', views.delete, name='delete'),
+    path('post/', views.post, name='post'),
 ]
