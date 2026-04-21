@@ -60,3 +60,34 @@ def delete(request, id):
         obj_data = temperature.objects.get(myid=id)
         print(model_to_dict(obj_data))
         return render(request, 'delete.html', {'obj_data': obj_data})
+    
+from Django.http import JsonResponse # Jsone格式顯示文字在網頁上面
+
+
+# 待補
+
+
+def updateList(request, id):
+    print(f"id:{id}")
+    try:
+        #POST寫法，比較安全
+        if request.method =="POST":
+            myid= request.POST('myid')
+            sensor_id= request.POST('sensor_id')
+            temperature= request.POST('temperature')
+            humidity= request.POST('humidity')
+            timestamp= request.POST('timestamp')
+            print(f"Received POST data: myid={myid}, sensor_id={sensor_id}, temperature={temperature}, humidity={humidity}, timestamp={timestamp}")
+
+            Temperature.objects.create(
+            myid=myid,
+            sensor_id=sensor_id,
+            temperature=temperature,
+            humidity=humidity,
+            timestamp=timestamp
+            )
+
+            return HttpResponse("資料已寫入資料庫")
+    except Exception as e:
+        return JsonResponse({"error": str(e)}) # 只接受字典 預設 safe=True
+        # return JsonResponse(f"錯誤: {e}", safe=False)
