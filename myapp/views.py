@@ -6,7 +6,7 @@ def homepage(request):
     return HttpResponse("Hello world!")
 
 from .models import temperature
-def Temperature(request):
+def Temp(request):
     resultList = temperature.objects.all().order_by('timestamp') # 時間戳擺在最上面
     # 搜尋功能
     search_keyword= request.GET.get('site_search')
@@ -43,7 +43,7 @@ def post(request):
         add = temperature(myid=myid, sensor_id=sensor_id, temperature=temperature, humidity=humidity, timestamp=timestamp)
         add.save()        
 
-        return redirect('Temperature')
+        return redirect('Temp')
     else:
         return render(request, 'post.html')
     
@@ -59,59 +59,49 @@ def delete(request, id):
         obj_data = temperature.objects.get(myid=id)
         print(model_to_dict(obj_data))
         return render(request, 'delete.html', {'obj_data': obj_data})
-<<<<<<< HEAD
 
 # web API 加入Json格式
 from django.http import JsonResponse
+@csrf_exempt
 def API_Temperature(request):
-    All_data= temperature.objects.all().order_by('id')
+    All_data= temperature.objects.all().order_by('myid')
     list_data= list(All_data.values()) #將 querySet 轉為 list；物件變成字典
-    return JsonResponse(list_data, safe=True) # 與允許dict
+    return JsonResponse(list_data, safe=False) # 與允許dict
 
 def API_post(request, id):
     try:
-        obj= temperature.objects.get(myid = id)
+        obj= temperature.objects.get(myid=id)
         # print(model_to_dict(obj))
         list_data= model_to_dict(obj) # object 打包成 python字典 (key, value) 之後才能繼續打包Jsone純文字格式
         return JsonResponse(list_data) #預設safe= False
     except:
         # return HttpResponse("False")
-        return JsonResponse("datas not found", status=404)
+        return JsonResponse({"message": "data not found"}, status=404)
 
-
-
-
-
-=======
-    
-from Django.http import JsonResponse # Jsone格式顯示文字在網頁上面
-
-
-# 待補
-
-
+@csrf_exempt    
 def updateList(request, id):
     print(f"id:{id}")
-    try:
-        #POST寫法，比較安全
-        if request.method =="POST":
-            myid= request.POST('myid')
-            sensor_id= request.POST('sensor_id')
-            temperature= request.POST('temperature')
-            humidity= request.POST('humidity')
-            timestamp= request.POST('timestamp')
-            print(f"Received POST data: myid={myid}, sensor_id={sensor_id}, temperature={temperature}, humidity={humidity}, timestamp={timestamp}")
+    if request.method   != "POST":
+        return HttpResponse("這個 API 只接受 POST", status=404)
 
-            Temperature.objects.create(
+    try:
+        myid = request.POST.get('myid')
+        sensor_id = request.POST.get('sensor_id')
+        temperature = request.POST.get('temperature')
+        humidity = request.POST.get('humidity')
+        timestamp = request.POST.get('timestamp')
+
+        print(f"Received POST data: myid={myid}, sensor_id={sensor_id}, temperature={temperature}, humidity={humidity}, timestamp={timestamp}")
+
+        temperature.objects.create(
             myid=myid,
             sensor_id=sensor_id,
             temperature=temperature,
-            humidity=humidity,
+            humidity=humidity,  
             timestamp=timestamp
-            )
+        )
 
-            return HttpResponse("資料已寫入資料庫")
+        return HttpResponse("資料已寫入資料庫")
+
     except Exception as e:
-        return JsonResponse({"error": str(e)}) # 只接受字典 預設 safe=True
-        # return JsonResponse(f"錯誤: {e}", safe=False)
->>>>>>> 40f18f933bb2b2ea3a5c92d762035967e3feac7c
+        return JsonResponse({"error": str(e)}, status=500)

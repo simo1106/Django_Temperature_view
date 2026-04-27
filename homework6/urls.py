@@ -21,20 +21,14 @@ from myapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('homepage/', views.homepage),
-    path('Temperature/', views.Temperature, name='Temperature'),
+    path('Temp/', views.Temp, name='Temp'),
     path('delete/<int:id>/', views.delete, name='delete'),
     path('post/', views.post, name='post'),
 
     # WEB API
-<<<<<<< HEAD
     path('API_Temperature/', views.API_Temperature, name='API_Temperature'),
     path('API_post/<int:id>/', views.API_post, name='API_post'),
-    # path('createItem/', views.createItem, name='createItem'),
-    # path('updateItem/<int:id>/', views.updateItem, name='updateItem'),
-=======
-
-    
     path('updateList/<int:id>/', views.updateList, name='updateList'),
+    # path('createItem/', views.createItem, name='createItem'),   
 
->>>>>>> 40f18f933bb2b2ea3a5c92d762035967e3feac7c
 ]
