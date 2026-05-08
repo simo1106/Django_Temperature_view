@@ -25,12 +25,11 @@ urlpatterns = [
     path('delete/<int:id>/', views.delete, name='delete'),
     path('post/', views.post, name='post'),
     path('data/', views.setData, name='setData'),
-    path('show_temp/', views.show_temp, name='show_temp'),
 
     # WEB API
     path('API_Temperature/', views.API_Temperature, name='API_Temperature'),
     path('API_Temperature_GET/', views.API_Temperature_GET, name='API_Temperature_GET'),
-    path('updateList/', views.updateList, name='updateList'),
+    path('API_Temperature_POST/', views.API_Temperature_POST, name='API_Temperature_POST'),
     
     # 顯示即時溫溼度資訊
     path('show_temp/', views.show_temp, name='show_temp'),

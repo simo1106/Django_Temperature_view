@@ -82,7 +82,7 @@ def API_Temperature_GET(request):
     return HttpResponse("這是API的GET方法")
 
 @csrf_exempt    
-def updateList(request):
+def API_Temperature_POST(request):
     if request.method != "POST":
         return HttpResponse("這個 API 只接受 POST", status=404)
 
